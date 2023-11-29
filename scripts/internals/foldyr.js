@@ -10,7 +10,57 @@ class FOLDYR {
   constructor(kernel, vcpu) {
     this.kernel = kernel;
     this.vcpu = vcpu;
+
+    this.fs = null;
+
+    this.openFileSystem();
   }
 
-  // TODO: Add file system using IndexedDB
+  openFileSystem() {
+    const request = indexedDB.open('myFileSystem', 1);
+
+    request.onsuccess = (event) => {
+      this.fs = event.target.result;
+    };
+
+    request.onerror = (event) => {
+      console.error('Failed to open the file system:', event.target.error);
+    };
+  }
+
+  createFile(path, content) {
+    const transaction = this.db.transaction('files', 'readwrite');
+    const objectStore = transaction.objectStore('files');
+
+    const file = {
+      path: path,
+      content: content
+    };
+
+    const request = objectStore.add(file);
+
+    request.onsuccess = (event) => {
+      console.log('File created:', event.target.result);
+    };
+
+    request.onerror = (event) => {
+      console.error('Failed to create the file:', event.target.error);
+    };
+  }
+
+  readFile(path) {
+    const transaction = this.db.transaction('files', 'readonly');
+    const objectStore = transaction.objectStore('files');
+
+    const request = objectStore.get(path);
+
+    request.onsuccess = (event) => {
+      const file = event.target.result;
+      console.log('File content:', file.content);
+    };
+
+    request.onerror = (event) => {
+      console.error('Failed to read the file:', event.target.error);
+    };
+  }
 }

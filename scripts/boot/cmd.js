@@ -7,7 +7,7 @@
 
 class CMDChck {
   constructor(kernel) {
-    this.commandList = ["help", "whois", "clear"];
+      this.commandList = ["help", "whois", "clear", "calc", "echo", "string"];
   }
 
   async waitForMessage() {
@@ -43,6 +43,15 @@ class CMDChck {
         case "clear":
             this.clear(cmd);
             break;
+        case "calc":
+          this.calc(cmd);
+          break;
+        case "echo":
+          this.echo(cmd);
+          break;
+        case "string":
+          this.string(cmd);
+          break;
 
         default:
           break;
@@ -81,6 +90,21 @@ class CMDChck {
     window.vgpu.drawKeystroke("| whois [user]", true);
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke("⊢ display information about [user]", true);
+
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke("| calc [oper] [num1] [num2]", true);
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke("⊢ calculates [num1] [oper] [num2]", true);
+
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke("| echo [str]", true);
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke("⊢ logs str. str must be in unescaped quotes.", true);
+
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke("| string [manip] [str]", true);
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke("⊢ manipulates str. str must be in unescaped quotes.", true);
   }
 
   whois(command) {
@@ -114,16 +138,170 @@ class CMDChck {
     window.vgpu.clearCanvas();
   } 
 
+  echo(command) {
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    const regex = /"(.*?[^\\])"/; // Regex pattern to match text within quotation marks without a backslash to its left
+    const match = command.match(regex); // Find the first match using `match()`
+
+    if (match) {
+      window.vgpu.drawKeystroke(match[1], true);
+    } else {
+      window.vgpu.ctx.fillStyle = "red";
+      window.vgpu.drawKeystroke(
+        "Invalid or non-existent second parameter found. Is it in quotes that aren't escaped?",
+        true
+      );
+      window.vgpu.ctx.fillStyle = "white";
+    }
+  }
+
   get(command) {
     // TODO: use fetch API for http requests
   }
 
   string(command) {
-    // TODO: add string manipulation
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke({ key: "Enter" });
+
+    const regex = /"(.*?[^\\])"/; // Regex pattern to match text within quotation marks without a backslash to its left
+    const match = command.match(regex); // Find the first match using `match()`
+    
+      switch (command.split(" ")[1]) {
+        case "lw":
+          if (match) {
+          window.vgpu.drawKeystroke(match[1].toLowerCase(), true);
+        } else {
+          window.vgpu.ctx.fillStyle = "red";
+          window.vgpu.drawKeystroke(
+            "Invalid or non-existent third parameter found. Is it in quotes that aren't escaped?",
+            true
+          );
+          window.vgpu.ctx.fillStyle = "white";
+        }
+          break;
+        case "up":
+          if (match) {
+          window.vgpu.drawKeystroke(match[1].toUpperCase(), true);
+        } else {
+          window.vgpu.ctx.fillStyle = "red";
+          window.vgpu.drawKeystroke(
+            "Invalid or non-existent third parameter found. Is it in quotes that aren't escaped?",
+            true
+          );
+          window.vgpu.ctx.fillStyle = "white";
+        }
+          break;
+        case "wf":
+          if (match) {
+          window.vgpu.drawKeystroke(match[1].toWellFormed(), true);
+        } else {
+          window.vgpu.ctx.fillStyle = "red";
+          window.vgpu.drawKeystroke(
+            "Invalid or non-existent third parameter found. Is it in quotes that aren't escaped?",
+            true
+          );
+          window.vgpu.ctx.fillStyle = "white";
+        }
+          break;
+        case "rv":
+          if (match) {
+          window.vgpu.drawKeystroke(match[1].reverse(), true);
+        } else {
+          window.vgpu.ctx.fillStyle = "red";
+          window.vgpu.drawKeystroke(
+            "Invalid or non-existent third parameter found. Is it in quotes that aren't escaped?",
+            true
+          );
+          window.vgpu.ctx.fillStyle = "white";
+        }
+          break;
+      
+        default:
+          window.vgpu.ctx.fillStyle = "red";
+      window.vgpu.drawKeystroke(
+        "Invalid or non-existent second parameter found. Valid parameters are 'lw', 'up', 'wf' and 'rv'.",
+        true
+      );
+      window.vgpu.ctx.fillStyle = "white";
+          break;
+      }
   }
 
   calc(command) {
-    // TODO: add math (boring)
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    if (command.split(" ")[1]) {
+      switch (command.split(" ")[1]) {
+        case "add":
+          if (command.split(" ")[2] && command.split(" ")[3]) {
+            window.vgpu.drawKeystroke((parseFloat(command.split(" ")[2]) + parseFloat(command.split(" ")[3])).toString(), true);
+          } else {
+            window.vgpu.ctx.fillStyle = "red";
+            window.vgpu.drawKeystroke(
+              "Invalid or missing second or third parameter. Valid parameters are INT or FLOAT.",
+              true
+            );
+            window.vgpu.ctx.fillStyle = "white";
+          }
+          break;
+
+        case "sub":
+          if (command.split(" ")[2] && command.split(" ")[3]) {
+            window.vgpu.drawKeystroke((parseFloat(command.split(" ")[2]) - parseFloat(command.split(" ")[3])).toString(), true);
+          } else {
+            window.vgpu.ctx.fillStyle = "red";
+            window.vgpu.drawKeystroke(
+              "Invalid or missing second or third parameter. Valid parameters are INT or FLOAT.",
+              true
+            );
+            window.vgpu.ctx.fillStyle = "white";
+          }
+          break;
+
+        case "mul":
+          if (command.split(" ")[2] && command.split(" ")[3]) {
+            window.vgpu.drawKeystroke(parseFloat(command.split(" ")[2]) * parseFloat(command.split(" ")[3]).toString(), true);
+          } else {
+            window.vgpu.ctx.fillStyle = "red";
+            window.vgpu.drawKeystroke(
+              "Invalid or missing second or third parameter. Valid parameters are INT or FLOAT.",
+              true
+            );
+            window.vgpu.ctx.fillStyle = "white";
+          }
+          break;
+
+        case "div":
+          if (command.split(" ")[2] && command.split(" ")[3]) {
+            window.vgpu.drawKeystroke(parseFloat(command.split(" ")[2]) / parseFloat(command.split(" ")[3]).toString(), true);
+          } else {
+            window.vgpu.ctx.fillStyle = "red";
+            window.vgpu.drawKeystroke(
+              "Invalid or missing second or third parameter. Valid parameters are INT or FLOAT.",
+              true
+            );
+            window.vgpu.ctx.fillStyle = "white";
+          }
+          break;
+      
+        default:
+          window.vgpu.ctx.fillStyle = "red";
+      window.vgpu.drawKeystroke(
+        "Invalid first parameter. Valid parameters are 'add', 'sub', 'mul' and 'div'.",
+        true
+      );
+      window.vgpu.ctx.fillStyle = "white";
+          break;
+      }
+    } else {
+      window.vgpu.ctx.fillStyle = "red";
+      window.vgpu.drawKeystroke(
+        "No first parameter found. Valid parameters are 'add', 'sub', 'mul' and 'div'.",
+        true
+      );
+      window.vgpu.ctx.fillStyle = "white";
+    }
   }
 
 

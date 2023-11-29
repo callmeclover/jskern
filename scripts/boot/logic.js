@@ -4,7 +4,10 @@
  *
  * @param {object} kernel
  */
-class VCPU {
+
+import { CMDChck } from "cmd";
+
+export class VCPU {
   constructor(kernel) {
     this.ctx = kernel.ctx;
     this.canvas = kernel.canvas;
@@ -50,12 +53,7 @@ class VCPU {
             window.vgpu.drawKeystroke({ key: "Enter" });
             window.vgpu.drawKeystroke({ key: "Enter" });
             window.vgpu.drawKeystroke("Ready for input!", true);
-            if (!navigator.onLine) {
-            window.vgpu.drawKeystroke({ key: "Enter" });
-            window.vgpu.drawKeystroke({ key: "Enter" });
-            window.vgpu.drawKeystroke("This machine was booted in an offline state. If any commands listed in 'help' are not working, please try connecting to the internet and reloading.", true);
-            }
-
+            
             setTimeout(async () => {
             while (true) {
               window.vgpu.drawKeystroke({ key: "Enter" });

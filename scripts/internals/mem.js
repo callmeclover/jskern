@@ -7,10 +7,27 @@
  */
 
 class MEMManager {
+  $memory;
     constructor(kernel, vcpu) {
       this.kernel = kernel;
       this.vcpu = vcpu;
+
+      this.$memory = sessionStorage;
     }
-  
-    // TODO: Add temporary storage using sessionStorage
+
+    setMemory(key, value) {
+      this.memory.setItem(key, value);
+    }
+
+    getMemory(key) {
+      return this.memory.getItem(key);
+    }
+    
+    deleteMemory(key) {
+      this.memory.removeItem(key);
+    }
+
+    clearMemory() {
+      this.memory.clear();
+    }
   }
