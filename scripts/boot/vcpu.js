@@ -16,6 +16,9 @@ class VCPU {
     this.cmdHandler = new CMDChck(kernel);
     this.foldyr = new FOLDYR(kernel, this);
 
+    // Navigator managers
+    this.batteryManager = navigator.getBattery();
+
     this.bootBegin = Date.now();
 
     this.agent = navigator.userAgent;
@@ -31,9 +34,10 @@ class VCPU {
 
   async boot() {
     window.vgpu.drawKeystroke("JsKern", true, "info");
-    window.vgpu.drawKeystroke(" v0.0.1", true);
+    window.vgpu.drawKeystroke(" v0.1.3", true);
       window.vgpu.drawKeystroke({ key: "Enter" });
-    window.vgpu.drawKeystroke("Boot time: " + new Date(this.bootBegin - Date.now()).getMilliseconds()+" ms", true);
+      this.bootTime = new Date(this.bootBegin - Date.now()).getMilliseconds()
+    window.vgpu.drawKeystroke("Boot time: " + this.bootTime + " ms", true);
 
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke({ key: "Enter" });

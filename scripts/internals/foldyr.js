@@ -17,7 +17,7 @@ class FOLDYR {
   }
 
   openFileSystem() {
-    const request = indexedDB.open('myFileSystem', 1);
+    const request = indexedDB.open('FOLDYR', 1);
 
     request.onsuccess = (event) => {
       this.fs = event.target.result;
@@ -29,7 +29,7 @@ class FOLDYR {
   }
 
   createFile(path, content) {
-    const transaction = this.db.transaction('files', 'readwrite');
+    const transaction = this.fs.transaction('files', 'readwrite');
     const objectStore = transaction.objectStore('files');
 
     const file = {
@@ -49,7 +49,7 @@ class FOLDYR {
   }
 
   readFile(path) {
-    const transaction = this.db.transaction('files', 'readonly');
+    const transaction = this.fs.transaction('files', 'readonly');
     const objectStore = transaction.objectStore('files');
 
     const request = objectStore.get(path);

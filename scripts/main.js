@@ -5,6 +5,10 @@ window.onerror = function(message, source, lineno, colno, error) {
   window.alert(errorMessage)
 };
 
+window.delay = async function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 window.colorSet = {
   "error": "tomato",
   "warning": "orange",
