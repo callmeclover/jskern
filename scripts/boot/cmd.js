@@ -7,7 +7,7 @@
 
 class CMDChck {
   constructor(kernel) {
-    this.commandList = ["help", "whois"];
+    this.commandList = ["help", "whois", "clear"];
   }
 
   async waitForMessage() {
@@ -40,6 +40,9 @@ class CMDChck {
         case "whois":
           this.whois(cmd);
           break;
+        case "clear":
+            this.clear(cmd);
+            break;
 
         default:
           break;
@@ -68,6 +71,12 @@ class CMDChck {
     window.vgpu.drawKeystroke("| help", true);
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke("⊢ display this help menu and exit", true);
+
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke("| clear", true);
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke("⊢ clear the screen", true);
+    
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke("| whois [user]", true);
     window.vgpu.drawKeystroke({ key: "Enter" });
@@ -100,6 +109,10 @@ class CMDChck {
       window.vgpu.ctx.fillStyle = "white";
     }
   }
+
+  clear(command) {
+    window.vgpu.clearCanvas();
+  } 
 
   get(command) {
     // TODO: use fetch API for http requests

@@ -143,4 +143,10 @@ class VGPU {
   drawCursor() {
     this.ctx.fillText("_", this.$typewriterX, this.$typewriterY);
   }
+
+  clearCanvas() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.$typewriterX = 10;
+    this.$typewriterY = 24;
+  }
 }
