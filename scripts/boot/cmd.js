@@ -101,5 +101,33 @@ class CMDChck {
     }
   }
 
+  get(command) {
+    // TODO: use fetch API for http requests
+  }
+
+  string(command) {
+    // TODO: add string manipulation
+  }
+
+  calc(command) {
+    // TODO: add math (boring)
+  }
+
+
+  // TODO: Implement IndexedDB file system for touch, ls, cd, etc.
+  
+  ls(command) {
+    // TODO
+  }
+
+  touch(command) {
+    // TODO
+  }
+
+  cd(command) {
+    // TODO
+  }
+
+
   /* END COMMANDS */
 }
