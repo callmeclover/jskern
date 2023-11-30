@@ -37,20 +37,6 @@ class VCPU {
     window.vgpu.drawKeystroke({ key: "Enter" });
 
     window.vgpu.drawKeystroke("Welcome to JsKern! Type 'help' for a list of commands.", true, "info");
-   
-    window.vgpu.drawKeystroke({ key: "Enter" });
-    window.vgpu.drawKeystroke({ key: "Enter" });
-    window.vgpu.drawKeystroke("Default", true);
-    window.vgpu.drawKeystroke({ key: "Enter" });
-    window.vgpu.drawKeystroke("Info", true, "info");
-    window.vgpu.drawKeystroke({ key: "Enter" });
-    window.vgpu.drawKeystroke("Error", true, "error");
-    window.vgpu.drawKeystroke({ key: "Enter" });
-    window.vgpu.drawKeystroke("Warning", true, "warning");
-    window.vgpu.drawKeystroke({ key: "Enter" });
-    window.vgpu.drawKeystroke("Success", true, "success");
-
-
 
     while (true) {
       window.vgpu.drawKeystroke({ key: "Enter" });
