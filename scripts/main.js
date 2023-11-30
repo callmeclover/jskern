@@ -13,7 +13,8 @@ window.vcpu.boot();
 
 // Capture keydown event to render the input on the canvas
 document.addEventListener("keydown", (event) => {
-    if (window.vcpu.acceptInput === false || window.vcpu.acceptInput === undefined) { return; }
+  event.preventDefault();
+  if (window.vcpu.acceptInput === false || window.vcpu.acceptInput === undefined) { return; }
   // Render the typed character on the canvas
   window.vgpu.drawKeystroke(event);
 });

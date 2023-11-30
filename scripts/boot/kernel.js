@@ -17,15 +17,15 @@ class Kernel {
       // Set the font and text color
       this.ctx.font = "24px monospace";
       this.ctx.fillStyle = "white";
-  
-      // Add event listener for window resize
-    window.addEventListener('resize', () => {
+
+      // Add event listener for window resize (most likely being removed)
+    /*window.addEventListener('resize', () => {
       // Update the canvas size
       this.canvas.width = window.innerWidth;
       this.canvas.height = window.innerHeight;
   
       // Call the redrawCanvas method to redraw the canvas
       window.vgpu.redrawCanvas();
-    });
+    });*/
     }
   }

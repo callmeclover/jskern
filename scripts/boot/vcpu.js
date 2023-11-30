@@ -14,6 +14,8 @@ class VCPU {
 
     this.cmdHandler = new CMDChck(kernel);
 
+    this.bootBegin = Date.now();
+
     this.agent = navigator.userAgent;
     this.spec = ["Boot time: " + Date.now().toLocaleString()];
   }
@@ -27,50 +29,17 @@ class VCPU {
 
   async boot() {
     window.vgpu.drawKeystroke("JsKern v0.0.1", true);
-    window.vgpu.drawKeystroke({ key: "Enter" });
-    window.vgpu.drawKeystroke("Waiting for the VGPU...", true);
-    setTimeout(async () => {
-      window.vgpu.drawKeystroke({ key: "Backspace" });
-      window.vgpu.drawKeystroke({ key: "Backspace" });
-      window.vgpu.drawKeystroke({ key: "Backspace" });
+      window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke(new Date(this.bootBegin - Date.now()).getMilliseconds()+" ms", true);
 
-      window.vgpu.drawKeystroke(": Done!", true);
-
-      setTimeout(async () => {
-        window.vgpu.drawKeystroke({ key: "Enter" });
-        window.vgpu.drawKeystroke("Waiting for the VCPU...", true);
-
-        setTimeout(async () => {
-          window.vgpu.drawKeystroke({ key: "Backspace" });
-          window.vgpu.drawKeystroke({ key: "Backspace" });
-          window.vgpu.drawKeystroke({ key: "Backspace" });
-
-          window.vgpu.drawKeystroke(": Done!", true);
-
-            window.vgpu.drawKeystroke({ key: "Enter" });
-            window.vgpu.drawKeystroke({ key: "Enter" });
-            window.vgpu.drawKeystroke("Ready for input!", true);
-            if (!navigator.onLine) {
-            window.vgpu.drawKeystroke({ key: "Enter" });
-            window.vgpu.drawKeystroke({ key: "Enter" });
-            window.vgpu.drawKeystroke("This machine was booted in an offline state. If any commands listed in 'help' are not working, please try connecting to the internet and reloading.", true);
-            }
-
-            setTimeout(async () => {
-            while (true) {
-              window.vgpu.drawKeystroke({ key: "Enter" });
-            window.vgpu.drawKeystroke({ key: "Enter" });
-
-            window.vgpu.drawKeystroke("~/ (amnst) $ ", true);
-            window.vgpu.setNPPOS();
-
-            this.acceptInput = true;
-            this.inCommand = true;
-            await this.cmdHandler.getCommand();
-            }
-          }, 2000);
-        }, 3000);
-      }, 4000);
-    }, 2000);
+    while (true) {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke("~/ (amnst) $ ", true);
+      window.vgpu.setNPPOS();
+      this.acceptInput = true;
+      this.inCommand = true;
+      await this.cmdHandler.getCommand();
+    }
   }
 }

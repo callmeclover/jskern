@@ -1,5 +1,7 @@
 function calcMaxLineLength(canvas) {
-  return Math.ceil(canvas.width / 14) * 14 + 10 - 28;
+  const lineWidth = Math.ceil(canvas.width / 14) * 14;
+  const adjustedLineWidth = lineWidth - 18;
+  return adjustedLineWidth;
 }
 
 /**
@@ -40,91 +42,97 @@ class VGPU {
    * @param {boolean} isWord - Whether the input is a word or not.
    */
   drawKeystroke(e, isWord) {
-    if (isWord) {
-      // If the input is a word, iterate over each character in the word
-      Array.from(e).forEach((element) => {
-        // Check if the typewriter has reached the end of the line
-        if (this.$typewriterX + 14 > this.canvas.width) {
-          // Move the typewriter to the beginning of the next line
-          this.$typewriterX = 10;
-          this.$typewriterY += 28;
-        }
-
-        // Draw the character at the current typewriter position
-        this.ctx.fillText(element, this.$typewriterX, this.$typewriterY);
-
-        // Move the typewriter to the right
-        this.$typewriterX += 14;
-      });
-      return;
-    }
-
-    if (e.key.length === 1) {
-      // Check if the typewriter has reached the end of the line
-      if (this.$typewriterX + 14 > this.canvas.width) {
-        // Move the typewriter to the beginning of the next line
-        this.$typewriterX = 10;
-        this.$typewriterY += 28;
-      }
-
-      this.typedText += e.key.toLowerCase();
-
-      // Draw the character at the current typewriter position
-      this.ctx.fillText(e.key, this.$typewriterX, this.$typewriterY);
-
-      // Move the typewriter to the right
-      this.$typewriterX += 14;
-    } else if (e.key === "Backspace") {
-      const prevCharX = this.$typewriterX - 14;
+    const CHAR_WIDTH = 14;
+    const LINE_HEIGHT = 28;
+   
+   
+    const newLine = () => {
+      this.$typewriterX = 10;
+      this.$typewriterY += LINE_HEIGHT;
+    };
+   
+   
+    const drawChar = (char) => {
+      this.ctx.fillText(char, this.$typewriterX, this.$typewriterY);
+      this.$typewriterX += CHAR_WIDTH;
+    };
+   
+   
+    const isBackspaceAllowed = () => {
+      const prevCharX = this.$typewriterX - CHAR_WIDTH;
       const prevCharY = this.$typewriterY;
-
-      // Skip backspace if the previous character is on the same line as xnppos
-      // and on or before ynppos line
-      if (prevCharX <= this.xnppos - 14 && prevCharY === this.ynppos) {
-        return;
-      } else if (
+   
+   
+      if (prevCharX <= this.xnppos - CHAR_WIDTH && prevCharY === this.ynppos) {
+        return false;
+      }
+      if (
         !(prevCharX <= this.xnppos && prevCharY > this.ynppos) &&
         prevCharX < this.xnppos &&
         prevCharY > this.ynppos
       ) {
-        // Move the typewriter to the end of the previous line
-        this.$typewriterX = this.maxLineLength;
-        this.$typewriterY -= 28;
-      } else if (prevCharX <= this.xnppos && prevCharY > this.ynppos) {
-        if (this.$typewriterX - 14 < 0 || this.$typewriterX - 14 === 0) {
-          // Move the typewriter to the end of the previous line
-          this.$typewriterX = this.maxLineLength;
-          this.$typewriterY -= 28;
-        } else {
-          // backspace if the previous character is on xnppos column
-          // and below ynppos line
-          this.$typewriterX -= 14;
-        }
-      } else {
-        // Move the typewriter to the left
-        this.$typewriterX -= 14;
+        return true;
+      }
+      if (prevCharX <= this.xnppos && prevCharY > this.ynppos) {
+        if (prevCharX < 0 || prevCharX === 0) {
+            this.$typewriterX = this.maxLineLength;
+            this.$typewriterY -= LINE_HEIGHT;
+          } else {
+            return true;
+          }
+      }
+      return true;
+    };
+   
+   
+    const handleBackspace = () => {
+      if (isBackspaceAllowed()) {
+        this.$typewriterX -= CHAR_WIDTH;
         this.typedText = this.typedText.slice(0, -1);
       }
-
-      // Clear the previous character from the canvas
-      this.ctx.clearRect(this.$typewriterX, this.$typewriterY - 20, 24, 28);
-    } else if (e.key === "Enter") {
+    };
+   
+   
+    const handleEnter = () => {
       if (!window.vcpu.inCommand) {
-        // Move the typewriter to the beginning of the next line
-        this.$typewriterX = 10;
-        this.$typewriterY += 28;
+        newLine();
       } else {
         window.postMessage(this.typedText);
         window.vcpu.inCommand = false;
         window.vcpu.acceptInput = false;
         this.typedText = "";
       }
+    };
+   
+   
+    if (isWord) {
+      Array.from(e).forEach((char) => {
+        if (this.$typewriterX + CHAR_WIDTH > this.canvas.width) {
+          newLine();
+        }
+        drawChar(char);
+      });
+      return;
     }
-
-    // Update the state of the canvas
-    this.$state = this.canvas.toDataURL();
-    window.kernel.scrollTop = window.kernel.scrollHeight;
-  }
+   
+   
+    if (e.key.length === 1) {
+      if (this.$typewriterX + CHAR_WIDTH > this.canvas.width) {
+        newLine();
+      }
+      this.typedText += e.key.toLowerCase();
+      drawChar(e.key);
+    } else if (e.key === "Backspace") {
+      handleBackspace();
+    } else if (e.key === "Enter") {
+      handleEnter();
+    }
+   
+   
+    this.ctx.clearRect(this.$typewriterX, this.$typewriterY - 20, 24, LINE_HEIGHT);
+   }
+   
+   
 
   /**
    * Redraws the canvas and reinstates it's properties.
