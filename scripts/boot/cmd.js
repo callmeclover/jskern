@@ -304,6 +304,10 @@ class CMDChck {
     }
   }
 
+  importcmd(command) {
+    // TODO: fetch js module file, set function to be child of this. and add name to commandlist
+  }
+
 
   // TODO: Implement IndexedDB file system for touch, ls, cd, etc.
   
