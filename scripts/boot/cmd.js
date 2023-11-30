@@ -176,8 +176,8 @@ echo(command) {
 
 calc(command) {
   
-  window.drawKeystroke({ key: "Enter" });
-  drawKeystroke({ key: "Enter" });
+  window.vgpu.drawKeystroke({ key: "Enter" });
+  window.vgpu.drawKeystroke({ key: "Enter" });
   
   const params = command.split(" ");
   const operation = params[1];
