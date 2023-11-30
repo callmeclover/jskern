@@ -41,7 +41,9 @@ class VCPU {
     while (true) {
       window.vgpu.drawKeystroke({ key: "Enter" });
       window.vgpu.drawKeystroke({ key: "Enter" });
-      window.vgpu.drawKeystroke("~/ (amnst) $ ", true);
+      window.vgpu.drawKeystroke("~/ (", true);
+      window.vgpu.drawKeystroke("amnst", true, "contrast")
+      window.vgpu.drawKeystroke(") $ ", true);
       window.vgpu.setNPPOS();
       this.acceptInput = true;
       this.inCommand = true;

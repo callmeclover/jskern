@@ -10,6 +10,7 @@ window.colorSet = {
   "warning": "orange",
   "success": "springgreen",
   "info": "royalblue",
+  "contrast": "darkorchid",
   "default": "white"
 };
 
