@@ -7,7 +7,7 @@
 
 class CMDChck {
   constructor(kernel) {
-      this.commandList = ["help", "whois", "clear", "calc", "echo", "string", "import"];
+      this.commandList = ["help", "whois", "clear", "calc", "echo", "string", "import", "spec"];
       this.intCommands = {
         help: this.help,
         whois: this.whois,
@@ -16,6 +16,7 @@ class CMDChck {
         echo: this.echo,
         string: this.string,
         import: this.importcmd,
+        spec: this.spec
       };
   }
 
@@ -55,6 +56,8 @@ help(command) {
     { command: "| echo [str]", description: "logs str. str must be in unescaped quotes." },
     { command: "| string [manip] [str]", description: "manipulates str. str must be in unescaped quotes." },
     { command: "| import [url]", description: "imports external commands from a url. very dangerous if you dont know what you're doing." }
+    { command: "| spec [what]", description: "shows system information." }
+
   ];
 
   window.vgpu.drawKeystroke({ key: "Enter" });
@@ -221,6 +224,16 @@ calc(command) {
       window.vgpu.drawKeystroke("[ERR]: Invalid first parameter. Valid parameters are 'add', 'sub', 'mul' and 'div'.", true, "error");
       break;
   }
+}
+
+  spec(command) {
+    const commandParts = command.split(" ");
+  commandParts.shift();
+  commandParts.forEach(element => {
+    if (window.vcpu.specs[element]) {
+      console.log(`${element}: ${window.vcpu.specs[element]}`);
+    }
+  });
 }
 
   importcmd(command) {

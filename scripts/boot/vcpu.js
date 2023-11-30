@@ -12,7 +12,9 @@ class VCPU {
     this.inCommand = false;
     this.acceptInput = false;
 
+    // Handlers
     this.cmdHandler = new CMDChck(kernel);
+    this.foldyr = new FOLDYR(kernel, this);
 
     this.bootBegin = Date.now();
 
