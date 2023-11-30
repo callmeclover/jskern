@@ -28,9 +28,29 @@ class VCPU {
   }
 
   async boot() {
-    window.vgpu.drawKeystroke("JsKern v0.0.1", true);
+    window.vgpu.drawKeystroke("JsKern", true, "info");
+    window.vgpu.drawKeystroke(" v0.0.1", true);
       window.vgpu.drawKeystroke({ key: "Enter" });
-    window.vgpu.drawKeystroke(new Date(this.bootBegin - Date.now()).getMilliseconds()+" ms", true);
+    window.vgpu.drawKeystroke("Boot time: " + new Date(this.bootBegin - Date.now()).getMilliseconds()+" ms", true);
+
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke({ key: "Enter" });
+
+    window.vgpu.drawKeystroke("Welcome to JsKern! Type 'help' for a list of commands.", true, "info");
+   
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke("Default", true);
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke("Info", true, "info");
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke("Error", true, "error");
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke("Warning", true, "warning");
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke("Success", true, "success");
+
+
 
     while (true) {
       window.vgpu.drawKeystroke({ key: "Enter" });

@@ -41,7 +41,9 @@ class VGPU {
    * @param {KeyboardEvent} e - The event object representing the key press.
    * @param {boolean} isWord - Whether the input is a word or not.
    */
-  drawKeystroke(e, isWord) {
+  drawKeystroke(e, isWord, color = "default") {
+    this.ctx.fillStyle = window.colorSet[color];
+
     const CHAR_WIDTH = 14;
     const LINE_HEIGHT = 28;
    

@@ -5,6 +5,14 @@ window.onerror = function(message, source, lineno, colno, error) {
   window.alert(errorMessage)
 };
 
+window.colorSet = {
+  "error": "tomato",
+  "warning": "orange",
+  "success": "springgreen",
+  "info": "royalblue",
+  "default": "white"
+};
+
 window.kernel = new Kernel(document.getElementById('kernel'));
 window.vcpu = new VCPU(window.kernel);
 window.vgpu = new VGPU(window.kernel);
