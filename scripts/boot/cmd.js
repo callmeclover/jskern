@@ -538,6 +538,12 @@ snake(command) {
       break;
   
     default:
+      window.vgpu.drawKeystroke(
+        "[ERR]: Invalid or missing second parameter. Valid parameters are 'amend', 'get', or 'add'.",
+        true,
+        "error"
+      );
+      return null;
       break;
   }
 }
