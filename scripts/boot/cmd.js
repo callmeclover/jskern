@@ -195,10 +195,6 @@ class CMDChck {
       return scrambledStr;
     };
 
-    var input = "Hello, World!";
-    var output = scrambleString(input);
-    console.log(output);
-
     const processCommand = (parameter, action) => {
       let value;
       switch (action) {

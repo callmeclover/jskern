@@ -9,7 +9,7 @@ class VCPU {
     this.ctx = kernel.ctx;
     this.canvas = kernel.canvas;
 
-    this.version = "v0.2.0";
+    this.version = "v0.2.1";
 
     this.inCommand = false;
     this.acceptInput = false;
