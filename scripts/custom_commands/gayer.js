@@ -1,7 +1,7 @@
 window.gayer = function(command) {
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke({ key: "Enter" });
-    
+
     switch (command.split(" ")[1]) {
         case "gay":
             window.vgpu.drawKeystroke("lo", true, "#E40303");
@@ -24,6 +24,7 @@ window.gayer = function(command) {
             window.vgpu.drawKeystroke("love ", true, "#D60270");
             window.vgpu.drawKeystroke("is ", true, "#9B4F96");
             window.vgpu.drawKeystroke("love", true, "#0038A8");
+            break;
         case "tra":
             window.vgpu.drawKeystroke("lo", true, "#0038A8");
             window.vgpu.drawKeystroke("ve ", true, "#F5A9B8");
@@ -42,3 +43,7 @@ window.gayer = function(command) {
     }
     return;
 }
+
+// do not edit below
+window.gayer.description = "pride is joy. love is love."
+window.gayer.parameters = ["sxlty"]

@@ -29,7 +29,7 @@ class CMDChck {
       spec: this.spec,
       time: this.time,
     };
-    window.commands = [
+    this.commands = [
       { command: "| help", description: "display this help menu and exit" },
       { command: "| clear", description: "clear the screen" },
       {
@@ -91,7 +91,7 @@ class CMDChck {
 
   help(command) {
     window.vgpu.drawKeystroke({ key: "Enter" });
-    window.commands.forEach(({ command, description }) => {
+    window.vcpu.cmdHandler.commands.forEach(({ command, description }) => {
       window.vgpu.drawKeystroke({ key: "Enter" });
       window.vgpu.drawKeystroke(command, true, "info");
       window.vgpu.drawKeystroke({ key: "Enter" });
@@ -399,10 +399,25 @@ class CMDChck {
     }
     const commandFunction = window[commandName];
     this[commandName] = commandFunction;
-    window.commands.push({
-      command: "| " + commandName,
-      description: "custom command.",
-    });
+    if (window[commandName].description) {
+      let stringofparams = "";
+      window[commandName].parameters.forEach((param) => {
+        stringofparams += " [" + param + "]";
+      });
+      window.vcpu.cmdHandler.commands.push({
+        command: "| " + commandName + stringofparams,
+        description: window[commandName].description,
+      });
+    } else {
+      let stringofparams = "";
+      window[commandName].parameters.forEach((param) => {
+        stringofparams += " [" + param + "]";
+      });
+      window.vcpu.cmdHandler.commands.push({
+        command: "| " + commandName + stringofparams,
+        description: "No description provided.",
+      });
+    }
     window.vcpu.cmdHandler.intCommands[commandName] = this[commandName];
     window.vcpu.cmdHandler.commandList.push(commandName);
 
