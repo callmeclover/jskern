@@ -361,6 +361,7 @@ class CMDChck {
       );
       return;
     } else {
+      try {
       window.vgpu.drawKeystroke(
         "[WARN]: Importing commands is very dangerous! Make sure you know what you are doing.",
         true,
@@ -377,7 +378,7 @@ class CMDChck {
       if (window.vcpu.cmdHandler.intCommands[commandName]) {
         window.vgpu.drawKeystroke({ key: "Enter" });
         window.vgpu.drawKeystroke(
-          "[ERR]: Command already exists. Please use a different command name.",
+          "[ERR]: Command '" + commandName + "' already exists. Please use a different command name.",
           true,
           "error"
         );
@@ -386,7 +387,7 @@ class CMDChck {
       if (!window[commandName]) {
         window.vgpu.drawKeystroke({ key: "Enter" });
         window.vgpu.drawKeystroke(
-          "[ERR]: Command does not exist. Please use a valid command name.",
+          "[ERR]: Command '" + commandName + "' does not exist. Please use a valid command name.",
           true,
           "error"
         );
@@ -425,6 +426,9 @@ class CMDChck {
       );
       window.vgpu.drawKeystroke({ key: "Enter" });
       window.vgpu.drawKeystroke({ key: "Enter" });
+      } catch (error) {
+        window.alert(error)
+      }
     }
   }
 
