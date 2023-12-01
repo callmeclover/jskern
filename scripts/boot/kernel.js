@@ -10,6 +10,8 @@ class Kernel {
     this.canvas = canvas;
     this.ctx = this.canvas.getContext("2d");
 
+    this.snake = {};
+
     // Set the canvas size
     this.canvas.width = window.innerWidth;
     this.canvas.height = 10000;

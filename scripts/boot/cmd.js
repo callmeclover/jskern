@@ -21,6 +21,7 @@ class CMDChck {
       "time",
       "ls",
       "touch",
+      "snake",
       "exit"
     ];
     this.intCommands = {
@@ -39,6 +40,7 @@ class CMDChck {
 
       ls: this.ls,
       touch: this.touch,
+      snake: this.snake,
 
       exit: this.exit
     };
@@ -72,6 +74,7 @@ class CMDChck {
       { command: "| spec", description: "shows system information." },
       { command: "| time [get]", description: "shows the current time." },
       { command: "| ls", description: "lists files in the file system." },
+      { command: "| snake [type] [key] [val]", description: "amends, adds, or reads Snake registry values." },
       { command: "| touch [file] [contents]", description: "creates a new file. contents must be in unescaped quotes" },
       { command: "| exit", description: "exits the shell." },
     ];
@@ -508,6 +511,37 @@ class CMDChck {
         break;
     }
   }
+
+snake(command) {
+  window.vgpu.drawKeystroke({ key: "Enter" });
+  window.vgpu.drawKeystroke({ key: "Enter" });
+
+  switch (command.split(" ")[1]) {
+    case "amend":
+      window.kernel.snake[command.split(" ")[2]] = command.split(" ")[3];
+      window.vgpu.drawKeystroke(
+        "[OK]: Amended " + command.split(" ")[2] + " with value " + command.split(" ")[3] + ".",
+        true,
+        "success"
+      );
+      break;
+    case "get":
+      window.vgpu.drawKeystroke("[INFO]: " + window.kernel.snake[command.split(" ")[2]], true, "info");
+      break;
+    case "add":
+      window.kernel.snake[command.split(" ")[2]] = command.split(" ")[3];
+      window.vgpu.drawKeystroke(
+        "[OK]: Added " + command.split(" ")[2] + " to the Snake registry with value " + command.split(" ")[3] + ".",
+        true,
+        "success"
+      );
+      break;
+  
+    default:
+      break;
+  }
+}
+
   // TODO: Implement IndexedDB file system for touch, ls, cd, etc.
 
   async ls(command) {
