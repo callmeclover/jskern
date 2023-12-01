@@ -1,42 +1,43 @@
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>kern</title>
 
     <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow-y: scroll;
-        }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow-y: scroll;
+      }
 
-        canvas {
-            position: absolute;
-            background-color: black;
-        }
+      canvas {
+        position: absolute;
+        background-color: black;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <canvas id="kernel"></canvas>
 
     <!-- Custom Commands-->
-    <script src='scripts/custom_commands/gayer.js'></script>
+    <script src="scripts/custom_commands/gayer.js"></script>
 
     <!-- Boot Scripts -->
-    <script src='scripts/boot/cmd.js'></script>
-    <script src='scripts/boot/vcpu.js'></script>
-    <script src='scripts/boot/kernel.js'></script>
+    <script src="scripts/boot/cmd.js"></script>
+    <script src="scripts/boot/vcpu.js"></script>
+    <script src="scripts/boot/kernel.js"></script>
 
     <!-- Rendering Scripts -->
-    <script src='scripts/draw/vgpu.js'></script>
+    <script src="scripts/draw/vgpu.js"></script>
 
     <!-- Internal Scripts -->
-    <script src='scripts/internals/foldyr.js'></script>
+    <script src="scripts/internals/foldyr.js"></script>
     <!--<script src='scripts/internals/mem.js'></script>-->
 
     <!-- Main Script -->
-    <script src='scripts/main.js'></script>
-</body>
+    <script src="scripts/main.js"></script>
+  </body>
 </html>

@@ -361,72 +361,71 @@ class CMDChck {
       );
       return;
     } else {
-    window.vgpu.drawKeystroke(
-      "[WARN]: Importing commands is very dangerous! Make sure you know what you are doing.",
-      true,
-      "warning"
-    );
-    window.vgpu.drawKeystroke({ key: "Enter" });
-    window.vgpu.drawKeystroke(
-      "[INFO]: Not implemented *entirely* in this version.",
-      true,
-      "info"
-    );
-
-    
-    const commandName = command.split(" ")[1];
-    if (window.vcpu.cmdHandler.intCommands[commandName]) {
+      window.vgpu.drawKeystroke(
+        "[WARN]: Importing commands is very dangerous! Make sure you know what you are doing.",
+        true,
+        "warning"
+      );
       window.vgpu.drawKeystroke({ key: "Enter" });
       window.vgpu.drawKeystroke(
-        "[ERR]: Command already exists. Please use a different command name.",
+        "[INFO]: Not implemented *entirely* in this version.",
         true,
-        "error"
+        "info"
       );
-      return;
-    }
-    if (!window[commandName]) {
+
+      const commandName = command.split(" ")[1];
+      if (window.vcpu.cmdHandler.intCommands[commandName]) {
+        window.vgpu.drawKeystroke({ key: "Enter" });
+        window.vgpu.drawKeystroke(
+          "[ERR]: Command already exists. Please use a different command name.",
+          true,
+          "error"
+        );
+        return;
+      }
+      if (!window[commandName]) {
+        window.vgpu.drawKeystroke({ key: "Enter" });
+        window.vgpu.drawKeystroke(
+          "[ERR]: Command does not exist. Please use a valid command name.",
+          true,
+          "error"
+        );
+        return;
+      }
+      const commandFunction = window[commandName];
+      this[commandName] = commandFunction;
+      if (window[commandName].description) {
+        let stringofparams = "";
+        window[commandName].parameters.forEach((param) => {
+          stringofparams += " [" + param + "]";
+        });
+        window.vcpu.cmdHandler.commands.push({
+          command: "| " + commandName + stringofparams,
+          description: window[commandName].description,
+        });
+      } else {
+        let stringofparams = "";
+        window[commandName].parameters.forEach((param) => {
+          stringofparams += " [" + param + "]";
+        });
+        window.vcpu.cmdHandler.commands.push({
+          command: "| " + commandName + stringofparams,
+          description: "No description provided.",
+        });
+      }
+      window.vcpu.cmdHandler.intCommands[commandName] = this[commandName];
+      window.vcpu.cmdHandler.commandList.push(commandName);
+
+      window.vgpu.drawKeystroke({ key: "Enter" });
       window.vgpu.drawKeystroke({ key: "Enter" });
       window.vgpu.drawKeystroke(
-        "[ERR]: Command does not exist. Please use a valid command name.",
+        "[OK]: Command '" + commandName + "' imported successfully.",
         true,
-        "error"
+        "success"
       );
-      return;
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke({ key: "Enter" });
     }
-    const commandFunction = window[commandName];
-    this[commandName] = commandFunction;
-    if (window[commandName].description) {
-      let stringofparams = "";
-      window[commandName].parameters.forEach((param) => {
-        stringofparams += " [" + param + "]";
-      });
-      window.vcpu.cmdHandler.commands.push({
-        command: "| " + commandName + stringofparams,
-        description: window[commandName].description,
-      });
-    } else {
-      let stringofparams = "";
-      window[commandName].parameters.forEach((param) => {
-        stringofparams += " [" + param + "]";
-      });
-      window.vcpu.cmdHandler.commands.push({
-        command: "| " + commandName + stringofparams,
-        description: "No description provided.",
-      });
-    }
-    window.vcpu.cmdHandler.intCommands[commandName] = this[commandName];
-    window.vcpu.cmdHandler.commandList.push(commandName);
-
-    window.vgpu.drawKeystroke({ key: "Enter" });
-    window.vgpu.drawKeystroke({ key: "Enter" });
-    window.vgpu.drawKeystroke(
-      "[OK]: Command '" + commandName + "' imported successfully.",
-      true,
-      "success"
-    );
-    window.vgpu.drawKeystroke({ key: "Enter" });
-    window.vgpu.drawKeystroke({ key: "Enter" });
-  }
   }
 
   time(command) {

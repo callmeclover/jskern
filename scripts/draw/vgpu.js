@@ -45,30 +45,26 @@ class VGPU {
     if (!(color in window.colorSet)) {
       this.ctx.fillStyle = color;
     } else {
-    this.ctx.fillStyle = window.colorSet[color];
+      this.ctx.fillStyle = window.colorSet[color];
     }
 
     const CHAR_WIDTH = 14;
     const LINE_HEIGHT = 28;
-   
-   
+
     const newLine = () => {
       this.$typewriterX = 10;
       this.$typewriterY += LINE_HEIGHT;
     };
-   
-   
+
     const drawChar = (char) => {
       this.ctx.fillText(char, this.$typewriterX, this.$typewriterY);
       this.$typewriterX += CHAR_WIDTH;
     };
-   
-   
+
     const isBackspaceAllowed = () => {
       const prevCharX = this.$typewriterX - CHAR_WIDTH;
       const prevCharY = this.$typewriterY;
-   
-   
+
       if (prevCharX <= this.xnppos - CHAR_WIDTH && prevCharY === this.ynppos) {
         return false;
       }
@@ -81,24 +77,22 @@ class VGPU {
       }
       if (prevCharX <= this.xnppos && prevCharY > this.ynppos) {
         if (prevCharX < 0 || prevCharX === 0) {
-            this.$typewriterX = this.maxLineLength;
-            this.$typewriterY -= LINE_HEIGHT;
-          } else {
-            return true;
-          }
+          this.$typewriterX = this.maxLineLength;
+          this.$typewriterY -= LINE_HEIGHT;
+        } else {
+          return true;
+        }
       }
       return true;
     };
-   
-   
+
     const handleBackspace = () => {
       if (isBackspaceAllowed()) {
         this.$typewriterX -= CHAR_WIDTH;
         this.typedText = this.typedText.slice(0, -1);
       }
     };
-   
-   
+
     const handleEnter = () => {
       if (!window.vcpu.inCommand) {
         newLine();
@@ -109,8 +103,7 @@ class VGPU {
         this.typedText = "";
       }
     };
-   
-   
+
     if (isWord) {
       Array.from(e).forEach((char) => {
         if (this.$typewriterX + CHAR_WIDTH > this.canvas.width) {
@@ -120,8 +113,7 @@ class VGPU {
       });
       return;
     }
-   
-   
+
     if (e.key.length === 1) {
       if (this.$typewriterX + CHAR_WIDTH > this.canvas.width) {
         newLine();
@@ -133,12 +125,14 @@ class VGPU {
     } else if (e.key === "Enter") {
       handleEnter();
     }
-   
-   
-    this.ctx.clearRect(this.$typewriterX, this.$typewriterY - 20, 24, LINE_HEIGHT);
-   }
-   
-   
+
+    this.ctx.clearRect(
+      this.$typewriterX,
+      this.$typewriterY - 20,
+      24,
+      LINE_HEIGHT
+    );
+  }
 
   /**
    * Redraws the canvas and reinstates it's properties.
