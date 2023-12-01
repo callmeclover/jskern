@@ -10,7 +10,7 @@ class VCPU {
     this.canvas = kernel.canvas;
     window.scrollTo(0,0)
 
-    this.version = "v0.2.1";
+    this.version = "v0.2.2";
 
     this.inCommand = false;
     this.acceptInput = false;
