@@ -9,6 +9,8 @@ class VCPU {
     this.ctx = kernel.ctx;
     this.canvas = kernel.canvas;
 
+    this.version = "v0.2.0";
+
     this.inCommand = false;
     this.acceptInput = false;
 
@@ -34,7 +36,7 @@ class VCPU {
 
   async boot() {
     window.vgpu.drawKeystroke("JsKern", true, "info");
-    window.vgpu.drawKeystroke(" v0.1.3", true);
+    window.vgpu.drawKeystroke(" " + this.version, true);
       window.vgpu.drawKeystroke({ key: "Enter" });
       this.bootTime = new Date(this.bootBegin - Date.now()).getMilliseconds()
     window.vgpu.drawKeystroke("Boot time: " + this.bootTime + " ms", true);

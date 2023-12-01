@@ -29,6 +29,33 @@ class CMDChck {
       spec: this.spec,
       time: this.time,
     };
+    window.commands = [
+      { command: "| help", description: "display this help menu and exit" },
+      { command: "| clear", description: "clear the screen" },
+      {
+        command: "| whois [user]",
+        description: "display information about [user]",
+      },
+      {
+        command: "| calc [oper] [num1] [num2]",
+        description: "calculates [num1] [oper] [num2]",
+      },
+      {
+        command: "| echo [str]",
+        description: "logs str. str must be in unescaped quotes.",
+      },
+      {
+        command: "| string [manip] [str]",
+        description: "manipulates str. str must be in unescaped quotes.",
+      },
+      {
+        command: "| import [url]",
+        description:
+          "imports external commands from a url. very dangerous if you dont know what you're doing.",
+      },
+      { command: "| spec", description: "shows system information." },
+      { command: "| time [get]", description: "shows the current time." },
+    ];
   }
 
   async waitForMessage() {
@@ -63,36 +90,8 @@ class CMDChck {
   /* BEGIN COMMANDS */
 
   help(command) {
-    const commands = [
-      { command: "| help", description: "display this help menu and exit" },
-      { command: "| clear", description: "clear the screen" },
-      {
-        command: "| whois [user]",
-        description: "display information about [user]",
-      },
-      {
-        command: "| calc [oper] [num1] [num2]",
-        description: "calculates [num1] [oper] [num2]",
-      },
-      {
-        command: "| echo [str]",
-        description: "logs str. str must be in unescaped quotes.",
-      },
-      {
-        command: "| string [manip] [str]",
-        description: "manipulates str. str must be in unescaped quotes.",
-      },
-      {
-        command: "| import [url]",
-        description:
-          "imports external commands from a url. very dangerous if you dont know what you're doing.",
-      },
-      { command: "| spec", description: "shows system information." },
-      { command: "| time [get]", description: "shows the current time." },
-    ];
-
     window.vgpu.drawKeystroke({ key: "Enter" });
-    commands.forEach(({ command, description }) => {
+    window.commands.forEach(({ command, description }) => {
       window.vgpu.drawKeystroke({ key: "Enter" });
       window.vgpu.drawKeystroke(command, true, "info");
       window.vgpu.drawKeystroke({ key: "Enter" });
@@ -178,6 +177,28 @@ class CMDChck {
       }
     };
 
+    const scrambleString = (str) => {
+      // Convert the string into an array of characters
+      var chars = str.split("");
+
+      // Shuffle the array using Fisher-Yates algorithm
+      for (var i = chars.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = chars[i];
+        chars[i] = chars[j];
+        chars[j] = temp;
+      }
+
+      // Join the characters back into a string
+      var scrambledStr = chars.join("");
+
+      return scrambledStr;
+    };
+
+    var input = "Hello, World!";
+    var output = scrambleString(input);
+    console.log(output);
+
     const processCommand = (parameter, action) => {
       let value;
       switch (action) {
@@ -205,9 +226,16 @@ class CMDChck {
             window.vgpu.drawKeystroke(value.split("").reverse().join(""), true);
           }
           break;
+        case "sc":
+          value = validateParameter(parameter);
+          if (value) {
+            window.vgpu.drawKeystroke(scrambleString(value), true);
+          }
+          break;
+
         default:
           window.vgpu.drawKeystroke(
-            "[ERR]: Invalid or non-existent second parameter found. Valid parameters are 'lw', 'up', 'wf' and 'rv'.",
+            "[ERR]: Invalid or non-existent second parameter found. Valid parameters are 'lw', 'up', 'wf', 'sc', and 'rv'.",
             true,
             "error"
           );
@@ -329,6 +357,14 @@ class CMDChck {
   importcmd(command) {
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke({ key: "Enter" });
+    if (!command.split(" ")[1]) {
+      window.vgpu.drawKeystroke(
+        "[ERR]: No command name provided. Please supply the command name in the first parameter.",
+        true,
+        "error"
+      );
+      return;
+    } else {
     window.vgpu.drawKeystroke(
       "[WARN]: Importing commands is very dangerous! Make sure you know what you are doing.",
       true,
@@ -336,12 +372,50 @@ class CMDChck {
     );
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke(
-      "[ERR]: Not implemented in this version.",
+      "[INFO]: Not implemented *entirely* in this version.",
       true,
-      "error"
+      "info"
     );
 
-    // TODO: fetch js module file, set function to be child of this. and add name to commandlist
+    
+    const commandName = command.split(" ")[1];
+    if (window.vcpu.cmdHandler.intCommands[commandName]) {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke(
+        "[ERR]: Command already exists. Please use a different command name.",
+        true,
+        "error"
+      );
+      return;
+    }
+    if (!window[commandName]) {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke(
+        "[ERR]: Command does not exist. Please use a valid command name.",
+        true,
+        "error"
+      );
+      return;
+    }
+    const commandFunction = window[commandName];
+    this[commandName] = commandFunction;
+    window.commands.push({
+      command: "| " + commandName,
+      description: "custom command.",
+    });
+    window.vcpu.cmdHandler.intCommands[commandName] = this[commandName];
+    window.vcpu.cmdHandler.commandList.push(commandName);
+
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke(
+      "[OK]: Command '" + commandName + "' imported successfully.",
+      true,
+      "success"
+    );
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke({ key: "Enter" });
+  }
   }
 
   time(command) {

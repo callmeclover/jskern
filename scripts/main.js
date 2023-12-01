@@ -24,10 +24,20 @@ window.vgpu = new VGPU(window.kernel);
 
 window.vcpu.boot();
 
+
+document.addEventListener("paste", (event) => {
+  if (window.vcpu.acceptInput === false || window.vcpu.acceptInput === undefined) { return; }
+  // Render the typed character on the canvas
+  window.vgpu.typedText += event.clipboardData.getData('text/plain');
+  window.vgpu.drawKeystroke(event.clipboardData.getData('text/plain'), true);
+});
+
 // Capture keydown event to render the input on the canvas
 document.addEventListener("keydown", (event) => {
   event.preventDefault();
   if (window.vcpu.acceptInput === false || window.vcpu.acceptInput === undefined) { return; }
+  if (event.ctrlKey && event.key === "v") { return; }
+
   // Render the typed character on the canvas
   window.vgpu.drawKeystroke(event);
 });

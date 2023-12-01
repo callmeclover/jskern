@@ -42,7 +42,11 @@ class VGPU {
    * @param {boolean} isWord - Whether the input is a word or not.
    */
   drawKeystroke(e, isWord, color = "default") {
+    if (!(color in window.colorSet)) {
+      this.ctx.fillStyle = color;
+    } else {
     this.ctx.fillStyle = window.colorSet[color];
+    }
 
     const CHAR_WIDTH = 14;
     const LINE_HEIGHT = 28;
