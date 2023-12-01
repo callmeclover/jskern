@@ -10,57 +10,74 @@ class FOLDYR {
   constructor(kernel, vcpu) {
     this.kernel = kernel;
     this.vcpu = vcpu;
-
-    this.fs = null;
-
-    this.openFileSystem();
   }
 
-  openFileSystem() {
-    const request = indexedDB.open("FOLDYR", 1);
+  async openFileSystemDB() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open('fileSystem', 1);
 
-    request.onsuccess = (event) => {
-      this.fs = event.target.result;
-    };
+      request.onerror = function(event) {
+        window.vgpu.drawKeystroke({ key: "Enter" });
+        window.vgpu.drawKeystroke("[ERR]: File system returned with '" + event.target.error + "'", true, "error");
+        reject(event.target.error);
+      };
 
-    request.onerror = (event) => {
-      console.error("Failed to open the file system:", event.target.error);
-    };
+      request.onsuccess = function(event) {
+        const fs = event.target.result; // Get the opened database
+        resolve(fs);
+      };
+
+      request.onupgradeneeded = function(event) {
+        const db = event.target.result;
+
+        if (!db.objectStoreNames.contains('files')) {
+          db.createObjectStore('files', {keyPath: 'id', autoIncrement: true});
+        }
+      };
+    });
   }
 
-  createFile(path, content) {
-    const transaction = this.fs.transaction("files", "readwrite");
-    const objectStore = transaction.objectStore("files");
-
-    const file = {
-      path: path,
-      content: content,
-    };
-
-    const request = objectStore.add(file);
-
-    request.onsuccess = (event) => {
-      console.log("File created:", event.target.result);
-    };
-
-    request.onerror = (event) => {
-      console.error("Failed to create the file:", event.target.error);
-    };
+  async createFile(data, fileName) {
+    try {
+      const fs = await this.openFileSystemDB();
+      const transaction = fs.transaction('files', 'readwrite');
+      const objectStore = transaction.objectStore('files');
+  
+        const request = objectStore.add(new File(data, fileName));
+  
+      return new Promise((resolve, reject) => {
+        request.onerror = function(event) {
+          reject(event.target.error);
+        };
+  
+        request.onsuccess = function(event) {
+          resolve(event.target.result);
+        };
+      });
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
-  readFile(path) {
-    const transaction = this.fs.transaction("files", "readonly");
-    const objectStore = transaction.objectStore("files");
+  async list() {
+    return new Promise((resolve, reject) => {
+      this.openFileSystemDB()
+        .then((fs) => {
+          const transaction = fs.transaction('files', 'readonly');
+          const objectStore = transaction.objectStore('files');
+          const request = objectStore.getAll();
 
-    const request = objectStore.get(path);
+          request.onerror = function(event) {
+            reject(event.target.error);
+          };
 
-    request.onsuccess = (event) => {
-      const file = event.target.result;
-      console.log("File content:", file.content);
-    };
-
-    request.onerror = (event) => {
-      console.error("Failed to read the file:", event.target.error);
-    };
+          request.onsuccess = function(event) {
+            resolve(event.target.result);
+          };
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   }
 }

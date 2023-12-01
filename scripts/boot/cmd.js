@@ -7,6 +7,8 @@
 
 class CMDChck {
   constructor(kernel) {
+    this.kernel = kernel
+
     this.commandList = [
       "help",
       "whois",
@@ -17,17 +19,28 @@ class CMDChck {
       "import",
       "spec",
       "time",
+      "ls",
+      "touch",
+      "exit"
     ];
     this.intCommands = {
       help: this.help,
+
       whois: this.whois,
+      spec: this.spec,
+      time: this.time,
+
       clear: this.clear,
+      import: this.importcmd,
+
       calc: this.calc,
       echo: this.echo,
       string: this.string,
-      import: this.importcmd,
-      spec: this.spec,
-      time: this.time,
+
+      ls: this.ls,
+      touch: this.touch,
+
+      exit: this.exit
     };
     this.commands = [
       {
@@ -58,6 +71,9 @@ class CMDChck {
       },
       { command: "| spec", description: "shows system information." },
       { command: "| time [get]", description: "shows the current time." },
+      { command: "| ls", description: "lists files in the file system." },
+      { command: "| touch [file] [contents]", description: "creates a new file. contents must be in unescaped quotes" },
+      { command: "| exit", description: "exits the shell." },
     ];
   }
 
@@ -75,7 +91,7 @@ class CMDChck {
     const command = cmd.split(" ")[0];
 
     if (this.commandList.includes(command)) {
-      this.intCommands[command](cmd);
+      await this.intCommands[command](cmd);
     } else {
       window.vgpu.drawKeystroke({ key: "Enter" });
       window.vgpu.drawKeystroke({ key: "Enter" });
@@ -364,7 +380,6 @@ class CMDChck {
       );
       return;
     } else {
-      try {
         window.vgpu.drawKeystroke(
           "[WARN]: Importing commands is very dangerous! Make sure you know what you are doing.",
           true,
@@ -400,6 +415,19 @@ class CMDChck {
           );
           return;
         }
+
+        if (commandName.substring(0, 4) === "vgpu" || commandName.substring(0, 4) === "VGPU" || commandName.substring(0, 4) === "vcpu" || commandName.substring(0, 4) === "VCPU" || commandName.substring(0, 6) === "kernel" || commandName.substring(0, 6) === "Kernel") {
+          window.vgpu.drawKeystroke({ key: "Enter" });
+          window.vgpu.drawKeystroke(
+            "[ERR]: Command '" +
+              commandName +
+              "' is reserved. Please use a different command name.",
+            true,
+            "error"
+          );
+          return;
+          
+        }
         const commandFunction = window[commandName];
         this[commandName] = commandFunction;
         if (window[commandName].description) {
@@ -433,9 +461,6 @@ class CMDChck {
         );
         window.vgpu.drawKeystroke({ key: "Enter" });
         window.vgpu.drawKeystroke({ key: "Enter" });
-      } catch (error) {
-        window.alert(error);
-      }
     }
   }
 
@@ -485,16 +510,50 @@ class CMDChck {
   }
   // TODO: Implement IndexedDB file system for touch, ls, cd, etc.
 
-  ls(command) {
-    // TODO
+  async ls(command) {
+
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke({ key: "Enter" });
+
+    await window.vcpu.foldyr.openFileSystemDB()
+
+    await window.vcpu.foldyr.list()
+    .then((res) => {
+      window.vgpu.drawKeystroke(res, true);
+    });
   }
 
-  touch(command) {
-    // TODO
+  async touch(command) {
+    let fileName;
+    if (command.split(" ")[1]) {
+      fileName = command.split(" ")[1];
+    } else {
+      window.vgpu.drawKeystroke("[ERR]: Missing file name parameter.", true, "error");
+      return;
+    }
+    const regex = /"(.*?[^\\])"/;
+    const match = command.match(regex);
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke({ key: "Enter" });
+
+    if (match) {
+      const data = match[1];
+  
+      // Create the file using FOLDYR
+      await window.vcpu.foldyr.createFile([data], fileName)
+        .then((fileId) => {
+          window.vgpu.drawKeystroke(`[OK]: File "${fileName}" created with ID: ${fileId}`, true, "success");
+        })
+        .catch((error) => {
+          window.vgpu.drawKeystroke(`[ERR]: Error creating file: ${error}`, true, "error");
+        });
+    } else {
+      window.vgpu.drawKeystroke("[ERR]: Invalid or missing string parameter. Please enclose the string in quotes.", true, "error");
+    }
   }
 
-  cd(command) {
-    // TODO
+  exit(command) {
+    window.kernel.exit();
   }
 
   /* END COMMANDS */

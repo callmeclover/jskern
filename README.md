@@ -18,4 +18,4 @@ You can also make your own commands by utilizing the `import` command.
 Just make a function attached to `window` in the 'scripts/custom_commands' directory, and put it in 'index.html'!
 
 An importable command is already in this script.
-Just run `import gayer`.
+Just run `import gayer` or `import burger`.

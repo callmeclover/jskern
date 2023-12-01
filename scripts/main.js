@@ -11,6 +11,7 @@ window.delay = async function delay(ms) {
 
 window.colorSet = {
   error: "tomato",
+  fatal: "crimson",
   warning: "orange",
   success: "springgreen",
   info: "royalblue",

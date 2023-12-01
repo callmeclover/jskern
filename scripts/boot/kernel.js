@@ -18,4 +18,17 @@ class Kernel {
     this.ctx.font = "24px monospace";
     this.ctx.fillStyle = "white";
   }
+
+  async fatal(stack) {
+    window.vgpu.drawKeystroke("[FATAL]: A fatal error has been thrown. The shell will now close. Stack: '" + stack + "'", true, "fatal");
+    setTimeout(() => {
+    window.alert("[FATAL]: A fatal error has been thrown. The shell will now close. Stack: '" + stack + "'");
+    window.close();
+
+  }, 2000);
+  }
+
+  exit() {
+    window.close();
+  }
 }
