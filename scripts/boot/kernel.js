@@ -10,7 +10,15 @@ class Kernel {
     this.canvas = canvas;
     this.ctx = this.canvas.getContext("2d");
 
-    this.snake = {};
+    if(localStorage.getItem("snake") !== null){
+      this.snake = JSON.parse(localStorage.getItem("snake"));
+    } else {
+      this.snake = {
+        "user": "guest",
+        "password": "",
+        "type": "amnst",
+      };
+    }
 
     // Set the canvas size
     this.canvas.width = window.innerWidth;

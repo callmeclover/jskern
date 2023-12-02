@@ -23,7 +23,7 @@ class CMDChck {
       "touch",
       "snake",
       "exit"
-    ];
+        ];
     this.intCommands = {
       help: this.help,
 
@@ -43,7 +43,7 @@ class CMDChck {
       snake: this.snake,
 
       exit: this.exit
-    };
+        };
     this.commands = [
       {
         command: "| help [page]",
@@ -94,7 +94,11 @@ class CMDChck {
     const command = cmd.split(" ")[0];
 
     if (this.commandList.includes(command)) {
-      await this.intCommands[command](cmd);
+      if (this.intCommands[command].constructor.name === 'AsyncFunction') {
+        await this.intCommands[command](cmd);
+      } else {
+        this.intCommands[command](cmd); 
+      }
     } else {
       window.vgpu.drawKeystroke({ key: "Enter" });
       window.vgpu.drawKeystroke({ key: "Enter" });
@@ -107,6 +111,13 @@ class CMDChck {
     }
 
     return;
+  }
+
+  async awaitInput() {
+    window.vcpu.acceptInput = true;
+    window.vcpu.inCommand = true;
+    let inp = await this.waitForMessage();
+    return inp;
   }
 
   /* BEGIN COMMANDS */
@@ -512,41 +523,95 @@ class CMDChck {
     }
   }
 
-snake(command) {
-  window.vgpu.drawKeystroke({ key: "Enter" });
-  window.vgpu.drawKeystroke({ key: "Enter" });
+  async snake(command) {
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke({ key: "Enter" });
 
-  switch (command.split(" ")[1]) {
-    case "amend":
-      window.kernel.snake[command.split(" ")[2]] = command.split(" ")[3];
-      window.vgpu.drawKeystroke(
-        "[OK]: Amended " + command.split(" ")[2] + " with value " + command.split(" ")[3] + ".",
-        true,
-        "success"
-      );
-      break;
-    case "get":
-      window.vgpu.drawKeystroke("[INFO]: " + window.kernel.snake[command.split(" ")[2]], true, "info");
-      break;
-    case "add":
-      window.kernel.snake[command.split(" ")[2]] = command.split(" ")[3];
-      window.vgpu.drawKeystroke(
-        "[OK]: Added " + command.split(" ")[2] + " to the Snake registry with value " + command.split(" ")[3] + ".",
-        true,
-        "success"
-      );
-      break;
+    const splitCommand = command.split(" ");
+    splitCommand.shift();
+    const [operation, param1, param2] = splitCommand;
   
-    default:
-      window.vgpu.drawKeystroke(
-        "[ERR]: Invalid or missing second parameter. Valid parameters are 'amend', 'get', or 'add'.",
-        true,
-        "error"
-      );
-      return null;
-      break;
+    switch (operation) {
+      case "amend":
+        if (!param1) {
+          window.vgpu.drawKeystroke("[ERR]: Missing second parameter.", true, "error");
+          return;
+        } else if (window.kernel.snake[param1] === undefined) {
+          window.vgpu.drawKeystroke(`[ERR]: '${param1}' does not exist in the Snake registry.`, true, "error");
+          return;
+        } else {
+          if (!param2) {
+            window.vgpu.drawKeystroke("[ERR]: Missing third parameter.", true, "error");
+            return;
+          }
+
+          if (param1 === "password" || param1 === "user" || param1 === "type") {
+            window.vgpu.drawKeystroke(`Entry '${param1}' is protected. Please input your password: `, true);
+            window.vgpu.setNPPOS();
+            let inp = await window.vcpu.cmdHandler.awaitInput();
+
+            if (inp === window.kernel.snake.password) {
+              window.vgpu.drawKeystroke({ key: "Enter" });
+              window.vgpu.drawKeystroke(`[OK]: Amended ${param1} with value ${param2}.`, true, "success");
+              window.kernel.snake[param1] = param2;
+            } else {
+              window.vgpu.drawKeystroke(`[ERR]: Incorrect password.`, true, "error");
+              return;
+            }
+          } else {
+            window.kernel.snake[param1] = param2;
+            window.vgpu.drawKeystroke(`[OK]: Amended ${param1} with value ${param2}.`, true, "success");
+          }
+        }
+        break;
+      case "get":
+        if (!param1) {
+          window.vgpu.drawKeystroke("[ERR]: Missing second parameter.", true, "error");
+          return;
+        } else if (!window.kernel.snake[param1]) {
+          window.vgpu.drawKeystroke(`[ERR]: '${param1}' does not exist in the Snake registry.`, true, "error");
+          return;
+        } else {
+          window.vgpu.drawKeystroke(`${window.kernel.snake[param1]}`, true);
+        }
+        break;
+      case "add":
+        if (!param1) {
+          window.vgpu.drawKeystroke("[ERR]: Missing second parameter.", true, "error");
+          return;
+        } else if (window.kernel.snake[param1]) {
+          window.vgpu.drawKeystroke(`[ERR]: '${param1}' already exists in the Snake registry.`, true, "error");
+          return;
+        } else {
+          if (!param2) {
+            window.vgpu.drawKeystroke("[ERR]: Missing third parameter.", true, "error");
+            return;
+          }
+          window.kernel.snake[param1] = param2;
+          window.vgpu.drawKeystroke(`[OK]: Added ${param1} to the Snake registry with value ${param2}.`, true, "success");
+        }
+        break;
+      case "list":
+        if (param1 === "--use-value") {
+          for (const [key, value] of Object.entries(window.kernel.snake)) {
+            window.vgpu.drawKeystroke({ key: "Enter" });
+            window.vgpu.drawKeystroke(`'${key}': '${value}'`, true);
+          }
+        } else {
+          window.vgpu.drawKeystroke("[INFO]: 'snake list' only lists entries, to list values, use 'snake list --use-value'.", true, "info");
+          for (const [key] of Object.entries(window.kernel.snake)) {
+            window.vgpu.drawKeystroke({ key: "Enter" });
+            window.vgpu.drawKeystroke(`'${key}'`, true);
+          }
+        }
+        break;
+      default:
+        window.vgpu.drawKeystroke("[ERR]: Invalid or missing first parameter. Valid parameters are 'amend', 'get', 'list', or 'add'.", true, "error");
+        return null;
+    }
+
+    localStorage.setItem("snake", JSON.stringify(window.kernel.snake));
   }
-}
 
   // TODO: Implement IndexedDB file system for touch, ls, cd, etc.
 

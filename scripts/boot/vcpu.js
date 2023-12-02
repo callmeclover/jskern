@@ -11,7 +11,7 @@ class VCPU {
     this.kernel = kernel;
     window.scrollTo(0,0)
 
-    this.version = "v0.2.4";
+    this.version = "v0.2.5";
 
     this.inCommand = false;
     this.acceptInput = false;
@@ -56,7 +56,8 @@ class VCPU {
       window.vgpu.drawKeystroke({ key: "Enter" });
       window.vgpu.drawKeystroke({ key: "Enter" });
       window.vgpu.drawKeystroke("~/ (", true);
-      window.vgpu.drawKeystroke("amnst", true, "contrast");
+      window.vgpu.drawKeystroke(window.kernel.snake.user + "@", true, "success");
+      window.vgpu.drawKeystroke(window.kernel.snake.type, true, "contrast");
       window.vgpu.drawKeystroke(") $ ", true);
       window.vgpu.setNPPOS();
       this.acceptInput = true;
