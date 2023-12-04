@@ -1,3 +1,5 @@
+const { compareVersions, compare, satisfies, validate } = window.compareVersions
+
 /**
  * VCPU
  * by Clover Johnson
@@ -37,12 +39,15 @@ class VCPU {
   }
 
   async getVersion() {
-      fetch('sample.txt')
-      .then(x => x.text())
-      .then((sampleResp) => {
-      window.alert(sampleResp);
-    });
+    try {
+      let fetchReq = await fetch('https://raw.githubusercontent.com/callmeclover/jskern/main/version.txt');
+      let version = await fetchReq.text()
+      return [version, compare(version, this.version, '=')];
+  } catch (error) {
+    window.vgpu.drawKeystroke("[ERR]: Failed to fetch latest; " + error, true, "error");
+    return;
   }
+}
 
   async boot() {
     window.vgpu.drawKeystroke("JsKern", true, "info");
@@ -50,6 +55,22 @@ class VCPU {
     window.vgpu.drawKeystroke({ key: "Enter" });
     this.bootTime = new Date(this.bootBegin - Date.now()).getMilliseconds();
     window.vgpu.drawKeystroke("Boot time: " + this.bootTime + " ms", true);
+
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke('Checking for updates...', true);
+    let utdArray = await this.getVersion();
+
+    if (utdArray[1] === true) {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke('[OK]: JsKern is up to date!', true, "success");
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke('[OK]: HERE (' + this.version + ') == REMOTE (' + utdArray[0] + ')', true, "success");
+    } else if (utdArray[1] === false) {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke('[WARN]: JsKern is outdated!', true, "warning");
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke('[WARN]: HERE (' + this.version + ') != REMOTE (' + utdArray[0] + ')', true, "warning");
+    }
 
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke({ key: "Enter" });
