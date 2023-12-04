@@ -51,7 +51,7 @@ class VCPU {
 
 async getThisVersion() {
   try {
-    let fetchReq = await fetch('version.txt');
+    let fetchReq = await fetch('../version.txt');
     let version = await fetchReq.text()
     return version;
 } catch (error) {
@@ -70,7 +70,6 @@ async getThisVersion() {
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke('Checking for updates...', true);
     this.version = await this.getThisVersion();
-    window.alert(this.version)
     let utdArray = await this.getVersion();
 
     if (utdArray[1] === true) {
