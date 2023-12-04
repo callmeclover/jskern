@@ -13,7 +13,7 @@ class VCPU {
     this.kernel = kernel;
     window.scrollTo(0,0)
 
-    this.version = "v0.2.5";
+    this.version = "v0.2.6";
 
     this.inCommand = false;
     this.acceptInput = false;
