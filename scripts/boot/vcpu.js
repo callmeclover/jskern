@@ -13,7 +13,7 @@ class VCPU {
     this.kernel = kernel;
     window.scrollTo(0,0)
 
-    this.version = "v0.2.6";
+    this.version = "";
 
     this.inCommand = false;
     this.acceptInput = false;
@@ -49,6 +49,17 @@ class VCPU {
   }
 }
 
+async getThisVersion() {
+  try {
+    let fetchReq = await fetch('version.txt');
+    let version = await fetchReq.text()
+    return version;
+} catch (error) {
+  window.vgpu.drawKeystroke("[ERR]: Failed to fetch latest; " + error, true, "error");
+  return;
+}
+}
+
   async boot() {
     window.vgpu.drawKeystroke("JsKern", true, "info");
     window.vgpu.drawKeystroke(" " + this.version, true);
@@ -58,6 +69,8 @@ class VCPU {
 
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke('Checking for updates...', true);
+    this.version = await this.getThisVersion();
+    window.alert(this.version)
     let utdArray = await this.getVersion();
 
     if (utdArray[1] === true) {

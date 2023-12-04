@@ -118,7 +118,7 @@ class VGPU {
       if (this.$typewriterX + CHAR_WIDTH > this.canvas.width) {
         newLine();
       }
-      this.typedText += e.key.toLowerCase();
+      this.typedText += e.key;
       drawChar(e.key);
     } else if (e.key === "Backspace") {
       handleBackspace();

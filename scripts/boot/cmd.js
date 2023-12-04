@@ -22,6 +22,7 @@ class CMDChck {
       "ls",
       "touch",
       "snake",
+      "glass",
       "exit"
         ];
     this.intCommands = {
@@ -41,12 +42,13 @@ class CMDChck {
       ls: this.ls,
       touch: this.touch,
       snake: this.snake,
+      glass: this.glass,
 
       exit: this.exit
         };
     this.commands = [
       {
-        command: "| help [page]",
+        command: "| help",
         description: "display this help menu and exit",
       },
       { command: "| clear", description: "clear the screen" },
@@ -69,13 +71,14 @@ class CMDChck {
       {
         command: "| import [url]",
         description:
-          "imports external commands from a url. very dangerous if you dont know what you're doing.",
+          "imports external commands from a file. very dangerous if you dont know what you're doing.",
       },
       { command: "| spec", description: "shows system information." },
       { command: "| time [get]", description: "shows the current time." },
       { command: "| ls", description: "lists files in the file system." },
-      { command: "| snake [type] [key] [val]", description: "amends, adds, or reads Snake registry values." },
+      { command: "| snake [type] [key] [val]", description: "amends, adds, or reads Snake registry values. val must be in unescaped quotes." },
       { command: "| touch [file] [contents]", description: "creates a new file. contents must be in unescaped quotes" },
+      { command: "| glass [object]", description: "checks values of information.." },
       { command: "| exit", description: "exits the shell." },
     ];
   }
@@ -92,7 +95,7 @@ class CMDChck {
     let cmd = await this.waitForMessage();
 
     const command = cmd.split(" ")[0];
-
+    
     if (this.commandList.includes(command)) {
       if (this.intCommands[command].constructor.name === 'AsyncFunction') {
         await this.intCommands[command](cmd);
@@ -114,6 +117,7 @@ class CMDChck {
   }
 
   async awaitInput() {
+    window.vgpu.setNPPOS();
     window.vcpu.acceptInput = true;
     window.vcpu.inCommand = true;
     let inp = await this.waitForMessage();
@@ -133,6 +137,22 @@ class CMDChck {
   }
 
   whois(command) {
+    if (command.split(" ")[1] == "help") {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke({ key: "Enter" });
+
+      window.vgpu.drawKeystroke(
+        "whois [user] - display information about [user]",
+        true,
+        "info"
+      );
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke(
+        "valid parameters: amnst, me, root",
+        true
+      );
+      return;
+    }
     const validParameters = ["amnst", "me", "root"];
     const parameter = command.split(" ")[1];
 
@@ -174,9 +194,25 @@ class CMDChck {
   }
 
   echo(command) {
+    if (command.split(" ")[1] == "help") {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke({ key: "Enter" });
+
+      window.vgpu.drawKeystroke(
+        "echo [str] - logs [str]. str must be in unescaped quotes",
+        true, "info"
+      );
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke(
+        "valid parameters: amnst, me, root",
+        true
+      );
+      return;
+    }
+
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke({ key: "Enter" });
-    const regex = /"(.*?[^\\])"/;
+    const regex = /"(.*?)"/i;
     const match = command.match(regex);
 
     if (match) {
@@ -192,11 +228,26 @@ class CMDChck {
   }
 
   string(command) {
+    if (command.split(" ")[1] == "help") {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke({ key: "Enter" });
+
+      window.vgpu.drawKeystroke(
+        "string [manipulation] [str] - manipulates str. str must be in unescaped quotes.",
+        true, "info"
+      );
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke(
+        "valid parameters: lw, up, wf, rv, sc; \"string\"",
+        true
+      );
+      return;
+    }
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke({ key: "Enter" });
 
     const validateParameter = (parameter) => {
-      const regex = /"(.*?[^\\])"/;
+      const regex = /"(.*?)"/i;
       const match = parameter.match(regex);
       if (match) {
         return match[1];
@@ -276,6 +327,21 @@ class CMDChck {
   }
 
   calc(command) {
+    if (command.split(" ")[1] == "help") {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke({ key: "Enter" });
+
+      window.vgpu.drawKeystroke(
+        "calc [oper] [num1] [num2] - calculates [num1] [oper] [num2].",
+        true, "info"
+      );
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke(
+        "valid parameters: add, sub, mul, div",
+        true
+      );
+      return;
+    }
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke({ key: "Enter" });
 
@@ -332,6 +398,17 @@ class CMDChck {
   }
 
   spec(command) {
+    if (command.split(" ")[1] == "help") {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke({ key: "Enter" });
+
+      window.vgpu.drawKeystroke(
+        "spec - displays system information.",
+        true,
+        "info"
+      );
+      return;
+    }
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke({ key: "Enter" });
 
@@ -384,6 +461,22 @@ class CMDChck {
   }
 
   importcmd(command) {
+    if (command.split(" ")[1] == "help") {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke({ key: "Enter" });
+
+      window.vgpu.drawKeystroke(
+        "import - imports external commands from a file. very dangerous if you don't know what you're doing.",
+        true,
+        "info"
+      );
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke(
+        "valid parameters: name of command",
+        true
+      );
+      return;
+    }
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke({ key: "Enter" });
     if (!command.split(" ")[1]) {
@@ -479,6 +572,22 @@ class CMDChck {
   }
 
   time(command) {
+    if (command.split(" ")[1] == "help") {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke({ key: "Enter" });
+
+      window.vgpu.drawKeystroke(
+        "time [get] - shows the current time.",
+        true,
+        "info"
+      );
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke(
+        "valid parameters: get-ms, get-sec, get-min, get-hour, get-day, get-month, get-year, get-time, get-date",
+        true
+      );
+      return;
+    }
     let time = new Date();
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke({ key: "Enter" });
@@ -524,13 +633,35 @@ class CMDChck {
   }
 
   async snake(command) {
+    if (command.split(" ")[1] == "help") {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke({ key: "Enter" });
+
+      window.vgpu.drawKeystroke(
+        "snake [type] [key] [val] - amends, adds, or reads Snake registry values. val must be in unescaped quotes.",
+        true, "info"
+      );
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke(
+        "valid parameters: amend, add, get, list; entry; \"value\"",
+        true
+      );
+      return;
+    }
+
     window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke({ key: "Enter" });
 
     const splitCommand = command.split(" ");
     splitCommand.shift();
-    const [operation, param1, param2] = splitCommand;
-  
+
+    const [operation, param1] = splitCommand;
+    
+    let param2;
+    if (/"(.*?)"/i.exec(command) != null) {
+      param2 = /"(.*?)"/i.exec(command)[1]
+    }
+
     switch (operation) {
       case "amend":
         if (!param1) {
@@ -547,7 +678,6 @@ class CMDChck {
 
           if (param1 === "password" || param1 === "user" || param1 === "type") {
             window.vgpu.drawKeystroke(`Entry '${param1}' is protected. Please input your password: `, true);
-            window.vgpu.setNPPOS();
             let inp = await window.vcpu.cmdHandler.awaitInput();
 
             if (inp === window.kernel.snake.password) {
@@ -555,6 +685,7 @@ class CMDChck {
               window.vgpu.drawKeystroke(`[OK]: Amended ${param1} with value ${param2}.`, true, "success");
               window.kernel.snake[param1] = param2;
             } else {
+              window.vgpu.drawKeystroke({ key: "Enter" });
               window.vgpu.drawKeystroke(`[ERR]: Incorrect password.`, true, "error");
               return;
             }
@@ -613,7 +744,46 @@ class CMDChck {
     localStorage.setItem("snake", JSON.stringify(window.kernel.snake));
   }
 
-  // TODO: Implement IndexedDB file system for touch, ls, cd, etc.
+  async glass(command) {
+    if (command.split(" ")[1] == "help") {
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke({ key: "Enter" });
+
+      window.vgpu.drawKeystroke(
+        "glass [object] - checks information of a value",
+        true
+      );
+      window.vgpu.drawKeystroke({ key: "Enter" });
+      window.vgpu.drawKeystroke(
+        "valid parameters: version",
+        true
+      );
+      return;
+    }
+
+    window.vgpu.drawKeystroke({ "key": "Enter" })
+    window.vgpu.drawKeystroke({ "key": "Enter" })
+
+    switch (command.split(" ")[1]) {
+      case "version":
+        let utdArray = await window.vcpu.getVersion();
+        if (utdArray[1] === true) {
+          window.vgpu.drawKeystroke({ key: "Enter" });
+          window.vgpu.drawKeystroke('[OK]: JsKern is up to date!', true, "success");
+          window.vgpu.drawKeystroke({ key: "Enter" });
+          window.vgpu.drawKeystroke('[OK]: HERE (' + this.version + ') == REMOTE (' + utdArray[0] + ')', true, "success");
+        } else if (utdArray[1] === false) {
+          window.vgpu.drawKeystroke({ key: "Enter" });
+          window.vgpu.drawKeystroke('[WARN]: JsKern is outdated!', true, "warning");
+          window.vgpu.drawKeystroke({ key: "Enter" });
+          window.vgpu.drawKeystroke('[WARN]: HERE (' + this.version + ') != REMOTE (' + utdArray[0] + ')', true, "warning");
+        }
+        break;
+      default:
+        window.vgpu.drawKeystroke("[ERR]: Invalid or missing first parameter. Valid parameters are 'version'.", true, "error");
+        return null;
+    }
+  }
 
   async ls(command) {
 
@@ -657,8 +827,17 @@ class CMDChck {
     }
   }
 
-  exit(command) {
-    window.kernel.exit();
+  async exit(command) {
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke({ key: "Enter" });
+
+    window.vgpu.drawKeystroke("Are you sure you want to exit? [y/n]: ", true, "info");
+    let inp = await window.vcpu.cmdHandler.awaitInput();
+    if (inp == 'y') {
+      window.kernel.exit();
+    } else {
+      window.vgpu.drawKeystroke("[INFO]: Aborted.", true, "info");
+    }
   }
 
   /* END COMMANDS */
