@@ -36,6 +36,14 @@ class VCPU {
     });
   }
 
+  async getVersion() {
+      fetch('sample.txt')
+      .then(x => x.text())
+      .then((sampleResp) => {
+      window.alert(sampleResp);
+    });
+  }
+
   async boot() {
     window.vgpu.drawKeystroke("JsKern", true, "info");
     window.vgpu.drawKeystroke(" " + this.version, true);
