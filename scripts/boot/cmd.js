@@ -771,12 +771,12 @@ class CMDChck {
           window.vgpu.drawKeystroke({ key: "Enter" });
           window.vgpu.drawKeystroke('[OK]: JsKern is up to date!', true, "success");
           window.vgpu.drawKeystroke({ key: "Enter" });
-          window.vgpu.drawKeystroke('[OK]: HERE (' + this.version + ') == REMOTE (' + utdArray[0] + ')', true, "success");
+          window.vgpu.drawKeystroke('[OK]: HERE (' + window.vcpu.version + ') == REMOTE (' + utdArray[0] + ')', true, "success");
         } else if (utdArray[1] === false) {
           window.vgpu.drawKeystroke({ key: "Enter" });
           window.vgpu.drawKeystroke('[WARN]: JsKern is outdated!', true, "warning");
           window.vgpu.drawKeystroke({ key: "Enter" });
-          window.vgpu.drawKeystroke('[WARN]: HERE (' + this.version + ') != REMOTE (' + utdArray[0] + ')', true, "warning");
+          window.vgpu.drawKeystroke('[WARN]: HERE (' + window.vcpu.version + ') != REMOTE (' + utdArray[0] + ')', true, "warning");
         }
         break;
       default:
