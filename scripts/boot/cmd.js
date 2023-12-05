@@ -840,5 +840,12 @@ class CMDChck {
     }
   }
 
+  async genfile(command) {
+    window.vgpu.drawKeystroke({ key: "Enter" });
+    window.vgpu.drawKeystroke({ key: "Enter" });
+
+    // TODO: run scripts 
+  }
+
   /* END COMMANDS */
 }

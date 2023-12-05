@@ -60,7 +60,8 @@ class VCPU {
     window.vgpu.drawKeystroke('Checking for updates...', true);
     let utdArray = await this.getVersion();
 
-    if (utdArray[1] === true) {
+    if (utdArray === undefined) {
+    } else if (utdArray[1] === true) {
       window.vgpu.drawKeystroke({ key: "Enter" });
       window.vgpu.drawKeystroke('[OK]: JsKern is up to date!', true, "success");
       window.vgpu.drawKeystroke({ key: "Enter" });
