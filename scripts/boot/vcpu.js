@@ -44,6 +44,7 @@ class VCPU {
       let version = await fetchReq.text()
       return [version, compare(version, this.version, '=')];
   } catch (error) {
+    window.vgpu.drawKeystroke({ key: "Enter" });
     window.vgpu.drawKeystroke("[ERR]: Failed to fetch latest; " + error, true, "error");
     return;
   }
