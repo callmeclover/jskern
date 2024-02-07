@@ -54,4 +54,6 @@ document.addEventListener("keydown", (event) => {
   window.vgpu.drawKeystroke(event);
 });
 
-window.onresize = function() {}
+window.onresize = function() {
+  window.vgpu.resizeCanvas();
+}
