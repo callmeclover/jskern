@@ -53,3 +53,5 @@ document.addEventListener("keydown", (event) => {
   // Render the typed character on the canvas
   window.vgpu.drawKeystroke(event);
 });
+
+window.onresize = function() {}
