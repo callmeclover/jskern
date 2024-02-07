@@ -140,7 +140,24 @@ class VGPU {
    * @return {void}
    */
   redrawCanvas() {
+    // Save state
     this.ctx.save();
+    // Reinstate properties
+    this.ctx.font = "24px monospace";
+    this.ctx.fillStyle = "white";
+
+    // Redraw the canvas
+    this.ctx.restore();
+  }
+
+  resizeCanvas() {
+    // Save state
+    this.ctx.save();
+
+    // Resize
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    
     // Reinstate properties
     this.ctx.font = "24px monospace";
     this.ctx.fillStyle = "white";
