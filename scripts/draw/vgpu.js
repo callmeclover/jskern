@@ -140,12 +140,13 @@ class VGPU {
    * @return {void}
    */
   redrawCanvas() {
+    this.ctx.save();
     // Reinstate properties
     this.ctx.font = "24px monospace";
     this.ctx.fillStyle = "white";
 
     // Redraw the canvas
-    this.ctx.drawImage(this.$state, 0, 0);
+    this.ctx.restore();
   }
 
   drawCursor() {
