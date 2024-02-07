@@ -152,7 +152,7 @@ class VGPU {
 
   resizeCanvas() {
     // Save state
-    this.ctx.save();
+    let imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
 
     // Resize
     this.canvas.width = window.innerWidth;
@@ -163,7 +163,7 @@ class VGPU {
     this.ctx.fillStyle = "white";
 
     // Redraw the canvas
-    this.ctx.restore();
+    this.ctx.putImageData(imageData, 0, 0);
   }
 
   drawCursor() {
